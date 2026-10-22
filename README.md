@@ -89,6 +89,43 @@ add_filter( 'herd_experience_disable_comments_disallowed_blocks', fn( $blocks ) 
 
 Replaces the `marshallu/herd-disable-comments` plugin; with the default settings the behavior matches it, except that Block Notes now work.
 
+### Activity log
+
+Records who changed what, in one network-wide table (`{base_prefix}herd_activity_log`, keyed by `blog_id`) rather than an option or one table per site:
+
+| Area | Events |
+| --- | --- |
+| Users | created, profile fields changed (names only, not values), role changed, added to / removed from a site, deleted, Super Admin granted / revoked, signed in (SSO or password) |
+| Sites | created, deleted, domain/path/public/archived/spam/deleted changed |
+| Settings | site options (`blogname`, `blog_public`, `siteurl`, `admin_email`, `default_role`, `users_can_register`, Herd Experience settings, …) and network options (`registration`, `upload_filetypes`, the comments switch, …) with old and new values |
+| Code | plugin activated / deactivated, theme switched |
+| Content | posts, pages, and media trashed, restored, or permanently deleted |
+
+The actor is the current user, or `wp-cli` / `cron` when there is none. IP addresses are not stored.
+
+- **Multisite:** Network Admin > **Activity Log** (Super Admins), filterable by site ID (`0` = network events), username, and action.
+- **Single site:** Tools > **Activity Log** (administrators).
+
+The table is created with `dbDelta` the first time it's needed. Entries older than 365 days are pruned daily in batches by a cron event on the main site.
+
+```php
+// Turn logging off.
+define( 'HERD_EXPERIENCE_DISABLE_ACTIVITY_LOG', true );
+
+// Keep entries longer.
+add_filter( 'herd_experience_activity_log_retention_days', fn() => 730 );
+
+// Log more options (values are stored).
+add_filter( 'herd_experience_activity_log_options', fn( $options ) => array_merge( $options, array( 'my_option' ) ) );
+add_filter( 'herd_experience_activity_log_network_options', fn( $options ) => $options );
+
+// Change or drop an entry before it's saved (return false to skip).
+add_filter( 'herd_experience_activity_log_entry', fn( $entry ) => $entry );
+
+// Log your own events.
+Herd_Experience_Activity_Log::log( 'profile_published', 'Published profile for Jane Doe.', array( 'object_type' => 'post', 'object_id' => 123 ) );
+```
+
 ### Environment indicator
 
 The admin bar shows the current environment (`VIP_GO_APP_ENVIRONMENT`, or `wp_get_environment_type()` off VIP): red on production, green on local, amber everywhere else. Filter the name with `herd_experience_environment` and the colors with `herd_experience_environment_colors`.
