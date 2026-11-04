@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+packages=(composer php-cli php-curl php-mbstring php-xml unzip)
+missing_packages=()
+
+for package in "${packages[@]}"; do
+	if ! dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -Fq 'install ok installed'; then
+		missing_packages+=("$package")
+	fi
+done
+
+if ((${#missing_packages[@]})); then
+	started=$SECONDS
+	printf 'Installing system packages: %s\n' "${missing_packages[*]}"
+	sudo apt-get update
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${missing_packages[@]}"
+	printf 'System packages installed in %ss.\n' "$((SECONDS - started))"
+else
+	printf 'System packages are already installed.\n'
+fi
+
+started=$SECONDS
+printf 'Installing locked Composer dependencies...\n'
+composer install --no-interaction --prefer-dist --no-progress
+printf 'Composer dependencies installed in %ss.\n' "$((SECONDS - started))"
