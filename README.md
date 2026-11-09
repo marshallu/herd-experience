@@ -130,6 +130,23 @@ Herd_Experience_Activity_Log::log( 'profile_published', 'Published profile for J
 
 The admin bar shows the current environment (`VIP_GO_APP_ENVIRONMENT`, or `wp_get_environment_type()` off VIP): red on production, green on local, amber everywhere else. Filter the name with `herd_experience_environment` and the colors with `herd_experience_environment_colors`.
 
+### Admin color scheme
+
+Every user gets the **Marshall** admin color scheme (black menu, [brand greens](https://www.marshall.edu/marsha/colors/)), whatever scheme they had saved, and the color scheme picker is removed from Users > Profile. Text on green uses Dark Accent Green `#028833` (4.6:1 against white) rather than Primary Green, which is only 3:1.
+
+The WordPress 7.1 block and site editors only recognize core's schemes, so they stay blue under Marshall until core supports custom schemes ([#65776](https://core.trac.wordpress.org/ticket/65776)).
+
+```php
+// Offer Marshall as one more choice and keep core's Default.
+add_filter( 'herd_experience_admin_colors_force', '__return_false' );
+```
+
+The stylesheet is compiled from `assets/admin-colors/marshall/colors.scss` with core's color scheme template. Rebuild it after editing the colors or upgrading WordPress:
+
+```bash
+bin/build-admin-colors.sh 7.1   # wordpress-develop branch
+```
+
 ### WordPress logo
 
 The WordPress (W) logo menu is removed from the admin bar for every user, on single sites and multisite.

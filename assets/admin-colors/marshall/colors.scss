@@ -1,0 +1,61 @@
+// Marshall admin color scheme.
+//
+// Built on core's color scheme template, like core's own schemes. Run
+// bin/build-admin-colors.sh to compile colors.css after editing this file
+// or upgrading WordPress.
+//
+// Colors: https://www.marshall.edu/marsha/colors/
+// Primary Green (#00ac3e) is only 3:1 against white, so text on green uses
+// Dark Accent Green (#028833, 4.6:1) and hover uses Darker Accent Green
+// (#007129).
+
+@use "sass:color";
+@use "sass:math";
+
+$black: #131716;
+$green: #028833;
+$green-darker: #007129;
+$green-bright: #08cd4f;
+
+@use "colors/admin" with (
+	$scheme-name: "marshall",
+	$base-color: $black,
+	$highlight-color: $green,
+	$notification-color: $green-bright,
+	$menu-bubble-text: $black,
+	$menu-submenu-focus-text: $green-bright,
+	$form-checked: $green,
+
+	$link: $green,
+	$link-focus: $green-darker,
+
+	$custom-welcome-panel: "false"
+);
+
+// Block editor and component accent color. Core defines these for its own
+// schemes in wp-base-styles; this mirrors the admin-scheme() mixin there.
+@function darken-by($color, $amount) {
+	$darker: color.adjust($color, $lightness: -$amount, $space: hsl);
+	@return rgb(math.round(color.channel($darker, "red", $space: rgb)), math.round(color.channel($darker, "green", $space: rgb)), math.round(color.channel($darker, "blue", $space: rgb)));
+}
+
+@function rgb-channels($color) {
+	@return color.channel($color, "red", $space: rgb), color.channel($color, "green", $space: rgb), color.channel($color, "blue", $space: rgb);
+}
+
+$green-darker-10: darken-by($green, 5%);
+$green-darker-20: darken-by($green, 10%);
+
+body.admin-color-marshall {
+	--wp-admin-theme-color: #{$green};
+	--wp-admin-theme-color--rgb: #{rgb-channels($green)};
+	--wp-admin-theme-color-darker-10: #{$green-darker-10};
+	--wp-admin-theme-color-darker-10--rgb: #{rgb-channels($green-darker-10)};
+	--wp-admin-theme-color-darker-20: #{$green-darker-20};
+	--wp-admin-theme-color-darker-20--rgb: #{rgb-channels($green-darker-20)};
+	--wp-admin-border-width-focus: 2px;
+
+	@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+		--wp-admin-border-width-focus: 1.5px;
+	}
+}
