@@ -130,6 +130,22 @@ Herd_Experience_Activity_Log::log( 'profile_published', 'Published profile for J
 
 The admin bar shows the current environment (`VIP_GO_APP_ENVIRONMENT`, or `wp_get_environment_type()` off VIP): red on production, green on local, amber everywhere else. Filter the name with `herd_experience_environment` and the colors with `herd_experience_environment_colors`.
 
+### WordPress logo
+
+The WordPress (W) logo menu is removed from the admin bar for every user, on single sites and multisite.
+
+### Network Admin columns (multisite)
+
+Loaded only on multisite:
+
+- **Sites** and **Users** get an **ID** column.
+- **Plugins** gets a **Usage** column: *Network activated*, *Not active on any site*, or *Active on N sites* with a collapsible list of those sites (linked to each site's Plugins screen, with archived, spam, and deactivated sites labeled). Not shown on the Must-Use and Drop-ins tabs.
+- **Themes** gets a **Usage** column: *Active on N sites* and, for parent themes, *Parent theme on N sites*.
+
+Usage is read straight from each site's options table, 100 sites per query, and cached for 12 hours in the site transients `herd_experience_plugin_usage` and `herd_experience_theme_usage`. The cache is cleared when a site's active plugins or theme change and when a site is created or deleted.
+
+Replaces the ID and Usage columns from the Multisite Enhancements plugin. Column keys (`herd_site_id`, `herd_user_id`, `herd_usage`), CSS classes, and transients don't overlap with that plugin's, so both can run during the cutover (each shows its own column).
+
 ## Install
 
 Install it as an mu-plugin so it can't be deactivated. Add it to each VIP codebase with Composer:
