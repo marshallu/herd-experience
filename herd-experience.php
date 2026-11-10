@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Herd Experience
  * Description: Shared security and admin defaults for Herd WordPress VIP applications.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: Marshall University
  * License: GPL-2.0-or-later
  * Text Domain: herd-experience
@@ -18,6 +18,7 @@ require_once __DIR__ . '/includes/class-herd-experience-security-headers.php';
 require_once __DIR__ . '/includes/class-herd-experience-environment-indicator.php';
 require_once __DIR__ . '/includes/class-herd-experience-admin-bar.php';
 require_once __DIR__ . '/includes/class-herd-experience-admin-colors.php';
+require_once __DIR__ . '/includes/class-herd-experience-admin-notices.php';
 require_once __DIR__ . '/includes/class-herd-experience-comments.php';
 require_once __DIR__ . '/includes/class-herd-experience-comments-settings.php';
 require_once __DIR__ . '/includes/class-herd-experience-activity-log.php';
@@ -30,6 +31,7 @@ Herd_Experience_Security_Headers::bootstrap();
 Herd_Experience_Environment_Indicator::bootstrap();
 Herd_Experience_Admin_Bar::bootstrap();
 Herd_Experience_Admin_Colors::bootstrap();
+Herd_Experience_Admin_Notices::bootstrap();
 Herd_Experience_Comments::bootstrap();
 Herd_Experience_Comments_Settings::bootstrap();
 Herd_Experience_Activity_Log::bootstrap();

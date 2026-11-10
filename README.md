@@ -151,6 +151,21 @@ bin/build-admin-colors.sh 7.1   # wordpress-develop branch
 
 The WordPress (W) logo menu is removed from the admin bar for every user, on single sites and multisite.
 
+### Hidden admin notices
+
+In wp-admin, these are hidden with `display: none`: the dashboard Welcome panel, Akismet's privacy notice, Yoast's indexation warning, Jetpack's connect banner, WP Mail SMTP's admin bar menu, Gravity Forms' background updates setting (VIP deploys updates from code), and a few legacy plugin nags.
+
+```php
+// Hide more, or show one again.
+add_filter(
+	'herd_experience_hidden_admin_selectors',
+	function ( $selectors ) {
+		$selectors[] = '.my-plugin-upsell';
+		return array_diff( $selectors, array( '.welcome-panel' ) );
+	}
+);
+```
+
 ### Network Admin columns (multisite)
 
 Loaded only on multisite:
