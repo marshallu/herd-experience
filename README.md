@@ -151,6 +151,10 @@ bin/build-admin-colors.sh 7.1   # wordpress-develop branch
 
 The WordPress (W) logo menu is removed from the admin bar for every user, on single sites and multisite.
 
+### Dashboard widgets
+
+Removes the Site Health Status, Daily Writing Prompt (Jetpack), Quick Draft, and WordPress Events and News widgets from the Dashboard.
+
 ### Hidden admin notices
 
 In wp-admin, these are hidden with `display: none`: the dashboard Welcome panel, Akismet's privacy notice, Yoast's indexation warning, Jetpack's connect banner, WP Mail SMTP's admin bar menu, Gravity Forms' background updates setting (VIP deploys updates from code), and a few legacy plugin nags.
